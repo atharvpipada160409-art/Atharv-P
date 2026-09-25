@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+client/dist/
+server/dist/
+
+# Compiled JS from shared (emitted by server tsc)
+shared/**/*.js
+shared/**/*.d.ts
+shared/**/*.js.map
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
