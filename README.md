@@ -85,3 +85,4 @@ npm run dev:client
 - Parameterized SQL queries eliminate SQL injection vulnerabilities.
 - Data isolation is strictly enforced at the query level using authenticated user tokens.
 - Sensitive environment variables and error traces are masked from client responses.
+"# Atharv_trial" 
