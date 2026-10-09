@@ -116,13 +116,15 @@ function executeFallbackQuery<T = any>(sql: string, params: any[]): { rows: T[];
   if (upper.includes('FROM USERS') || upper.startsWith('INSERT INTO USERS') || upper.startsWith('UPDATE USERS')) {
     // INSERT INTO users
     if (upper.startsWith('INSERT INTO USERS')) {
-      const id = crypto.randomUUID();
-      const email = params[0];
-      const password_hash = params[1];
-      const full_name = params[2];
-      const entity_type = params[3] || 'individual';
-      const currency = params[4] || 'USD';
-      const low_runway_threshold_days = params[5] || 30;
+      const hasExplicitId = params.length >= 7;
+      const id = hasExplicitId ? params[0] : crypto.randomUUID();
+      const offset = hasExplicitId ? 1 : 0;
+      const email = params[offset];
+      const password_hash = params[offset + 1];
+      const full_name = params[offset + 2];
+      const entity_type = params[offset + 3] || 'individual';
+      const currency = params[offset + 4] || 'USD';
+      const low_runway_threshold_days = params[offset + 5] || 30;
       const now = new Date().toISOString();
 
       const newUser = {
@@ -189,11 +191,13 @@ function executeFallbackQuery<T = any>(sql: string, params: any[]): { rows: T[];
 
     // INSERT INTO accounts
     if (upper.startsWith('INSERT INTO ACCOUNTS')) {
-      const id = crypto.randomUUID();
-      const user_id = params[0];
-      const account_name = params[1];
-      const account_type = params[2];
-      const current_balance = parseFloat(params[3] || 0);
+      const hasExplicitId = params.length >= 5;
+      const id = hasExplicitId ? params[0] : crypto.randomUUID();
+      const offset = hasExplicitId ? 1 : 0;
+      const user_id = params[offset];
+      const account_name = params[offset + 1];
+      const account_type = params[offset + 2];
+      const current_balance = parseFloat(params[offset + 3] || 0);
       const now = new Date().toISOString();
 
       const newAccount = {
@@ -293,16 +297,18 @@ function executeFallbackQuery<T = any>(sql: string, params: any[]): { rows: T[];
 
     // INSERT INTO transactions
     if (upper.startsWith('INSERT INTO TRANSACTIONS')) {
-      const id = crypto.randomUUID();
-      const user_id = params[0];
-      const account_id = params[1];
-      const amount = parseFloat(params[2]);
-      const type = params[3];
-      const category = params[4];
-      const description = params[5] || '';
-      const transaction_date = params[6];
-      const is_recurring = Boolean(params[7]);
-      const recurring_frequency = params[8] || 'none';
+      const hasExplicitId = params.length >= 10;
+      const id = hasExplicitId ? params[0] : crypto.randomUUID();
+      const offset = hasExplicitId ? 1 : 0;
+      const user_id = params[offset];
+      const account_id = params[offset + 1];
+      const amount = parseFloat(params[offset + 2]);
+      const type = params[offset + 3];
+      const category = params[offset + 4];
+      const description = params[offset + 5] || '';
+      const transaction_date = params[offset + 6];
+      const is_recurring = Boolean(params[offset + 7]);
+      const recurring_frequency = params[offset + 8] || 'none';
       const created_at = new Date().toISOString();
 
       const newTx = {
@@ -364,12 +370,14 @@ function executeFallbackQuery<T = any>(sql: string, params: any[]): { rows: T[];
       return { rows: list as unknown as T[], rowCount: list.length };
     }
     if (upper.startsWith('INSERT INTO FORECAST_SNAPSHOTS')) {
-      const id = crypto.randomUUID();
-      const user_id = params[0];
-      const forecast_date = params[1];
-      const projected_balance = parseFloat(params[2]);
-      const projected_income = parseFloat(params[3]);
-      const projected_expense = parseFloat(params[4]);
+      const hasExplicitId = params.length >= 6;
+      const id = hasExplicitId ? params[0] : crypto.randomUUID();
+      const offset = hasExplicitId ? 1 : 0;
+      const user_id = params[offset];
+      const forecast_date = params[offset + 1];
+      const projected_balance = parseFloat(params[offset + 2]);
+      const projected_income = parseFloat(params[offset + 3]);
+      const projected_expense = parseFloat(params[offset + 4]);
       const created_at = new Date().toISOString();
 
       const snapshot = { id, user_id, forecast_date, projected_balance, projected_income, projected_expense, created_at };
@@ -388,11 +396,14 @@ function executeFallbackQuery<T = any>(sql: string, params: any[]): { rows: T[];
       return { rows: list as unknown as T[], rowCount: list.length };
     }
     if (upper.startsWith('INSERT INTO AI_INSIGHTS')) {
-      const id = crypto.randomUUID();
-      const user_id = params[0];
-      const insight_type = params[1];
-      const summary = params[2];
-      const detailed_json = typeof params[3] === 'string' ? JSON.parse(params[3]) : params[3];
+      const hasExplicitId = params.length >= 5;
+      const id = hasExplicitId ? params[0] : crypto.randomUUID();
+      const offset = hasExplicitId ? 1 : 0;
+      const user_id = params[offset];
+      const insight_type = params[offset + 1];
+      const summary = params[offset + 2];
+      const rawJson = params[offset + 3];
+      const detailed_json = typeof rawJson === 'string' ? JSON.parse(rawJson) : rawJson;
       const created_at = new Date().toISOString();
 
       const insight = { id, user_id, insight_type, summary, detailed_json, created_at };
